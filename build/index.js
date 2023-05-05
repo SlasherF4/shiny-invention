@@ -33,6 +33,8 @@ const categories_routes_1 = __importDefault(require("./routes/categories.routes"
 const mongoose_1 = require("./mongoose");
 const cors_1 = __importDefault(require("cors"));
 const dotenv = __importStar(require("dotenv"));
+const path_1 = __importDefault(require("path"));
+// import fs from "fs"
 dotenv.config();
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
@@ -41,9 +43,13 @@ app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
 app.use(express_1.default.static("public"));
+app.use(express_1.default.static("public/dist"));
 app.get("/hello", (_req, res) => {
     console.log("someone pinged here!!!");
     res.send("hi");
+});
+app.get("/", (_req, res) => {
+    res.sendFile(path_1.default.join(__dirname, "..", "public", "dist", "index.html"));
 });
 app.use("/products", products_routes_1.default);
 app.use("/auth", auth_routes_1.default);
