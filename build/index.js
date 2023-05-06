@@ -50,7 +50,7 @@ app.get("/hello", (_req, res) => {
 });
 app.get([
     "/",
-    "/:category",
+    "/category/:category",
     "/Login",
     "/signin",
     "/product/:id",
