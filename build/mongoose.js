@@ -74,7 +74,8 @@ const DbConnect = () => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, mongoose_1.connect)(uri, {
         user: process.env.DATABASE_USER,
         pass: process.env.DATABASE_PASS,
-        authSource: process.env.DATABASE_AUTH
+        authSource: process.env.DATABASE_AUTH,
+        authMechanism: "SCRAM-SHA-1"
     });
     console.log("connected with database");
 });
