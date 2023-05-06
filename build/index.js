@@ -48,7 +48,16 @@ app.get("/hello", (_req, res) => {
     console.log("someone pinged here!!!");
     res.send("hi");
 });
-app.get(["/", "/Login"], (_req, res) => {
+app.get([
+    "/",
+    "/:category",
+    "/Login",
+    "/signin",
+    "/product/:id",
+    "/edititem/:id",
+    "/addcategory",
+    "/additem",
+], (_req, res) => {
     res.sendFile(path_1.default.join(__dirname, "..", "public", "dist", "index.html"));
 });
 app.use("/products", products_routes_1.default);
