@@ -48,7 +48,7 @@ app.get("/hello", (_req, res) => {
     console.log("someone pinged here!!!");
     res.send("hi");
 });
-app.get("/", (_req, res) => {
+app.get(["/", "/Login"], (_req, res) => {
     res.sendFile(path_1.default.join(__dirname, "..", "public", "dist", "index.html"));
 });
 app.use("/products", products_routes_1.default);
