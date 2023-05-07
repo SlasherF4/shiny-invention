@@ -15,7 +15,7 @@ const jwt_1 = require("../middlewares/jwt");
 const loginUser = (req, res, _next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password } = req.body;
-        if (email == undefined || password == undefined) {
+        if (!email || !password) {
             return res.sendStatus(403);
         }
         const login = yield mongoose_1.userModel.find({ email, password });
@@ -33,14 +33,14 @@ exports.loginUser = loginUser;
 const verifyUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const header = req.headers.authorization;
-        if (header != undefined) {
+        if (header) {
             const token = header.split(" ")[1];
             const decoded = (0, jwt_1.verifyToken)(token);
-            if (decoded == false) {
+            if (!decoded) {
                 return res.sendStatus(403);
             }
             const verify = yield mongoose_1.userModel.findOne({ email: decoded.email });
-            if (verify != null)
+            if (verify)
                 return next();
             return res.sendStatus(403);
         }

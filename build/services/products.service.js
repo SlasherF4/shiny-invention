@@ -54,7 +54,7 @@ const deleteProductById = (req, res, _next) => __awaiter(void 0, void 0, void 0,
         const id = req.params.id;
         console.log("hi");
         const find = yield mongoose_1.productModel.findByIdAndDelete(id);
-        if (find != null)
+        if (find)
             return res.send(find);
         return res.sendStatus(404);
     }
@@ -67,7 +67,7 @@ const getProductById = (req, res, _next) => __awaiter(void 0, void 0, void 0, fu
     try {
         const id = req.params.id;
         const find = yield mongoose_1.productModel.findById(id);
-        if (find != null)
+        if (find)
             return res.send(find);
         return res.sendStatus(404);
     }
@@ -82,7 +82,7 @@ const getProductsByCategory = (req, res, _next) => __awaiter(void 0, void 0, voi
         const find = yield mongoose_1.productModel.find({
             category: category,
         });
-        if (find != null)
+        if (find)
             return res.send(find);
         return res.sendStatus(404);
     }
@@ -95,9 +95,8 @@ const modifyProduct = (req, res, _next) => __awaiter(void 0, void 0, void 0, fun
     try {
         const product = req.body;
         const edit = yield mongoose_1.productModel.findByIdAndUpdate(product._id, product);
-        if (edit != null) {
+        if (edit)
             return res.send(edit);
-        }
         return res.send(404);
     }
     catch (error) {
