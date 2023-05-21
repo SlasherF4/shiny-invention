@@ -1,11 +1,5 @@
 .env
 tsconfig.json
-src
 node_modules
-public/public
-public/.gitignore
-public/index.html
-public/package-lock.json
-public/package.json
-public/tsconfig.node.json
-public/vite.config.ts
+public
+build
