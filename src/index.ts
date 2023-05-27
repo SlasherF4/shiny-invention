@@ -2,11 +2,11 @@ import express from "express";
 import productsRouter from "./routes/products.routes";
 import authRouter from "./routes/auth.routes";
 import categoriesRouter from "./routes/categories.routes";
+import paymentRouter from "./routes/payment.routes"
 import { DbConnect } from "./mongoose";
 import cors from "cors";
 import * as dotenv from "dotenv";
 import path from "path";
-// import fs from "fs"
 
 dotenv.config();
 
@@ -37,6 +37,7 @@ app.get(
     "/edititem/:id",
     "/addcategory",
     "/additem",
+    "/checkout"
   ],
   (_req, res) => {
     res.sendFile(path.join(__dirname, "..", "public", "dist", "index.html"));
@@ -46,6 +47,7 @@ app.get(
 app.use("/products", productsRouter);
 app.use("/auth", authRouter);
 app.use("/categories", categoriesRouter);
+app.use("/payment", paymentRouter)
 
 app.listen(PORT, () => {
   console.log(`server listening on port ${PORT}`);
