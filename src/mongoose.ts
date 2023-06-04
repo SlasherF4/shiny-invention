@@ -23,7 +23,8 @@ type inventary = {
 
 type sizes = {
   size: string;
-  stock: number
+  stock: number;
+  weight: number
 }
 
 // user
@@ -57,7 +58,8 @@ const productSchema = new Schema<newProduct>({
     model: String,
     sizes: [{
       size: String,
-      stock: Number
+      stock: Number,
+      weight: Number
     }]
   }]
 })
