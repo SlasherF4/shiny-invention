@@ -37,11 +37,6 @@ export const createPreference = async (
     return res.json({
       id: response.body.id,
     });
-    // .then((response) => {
-    //   return res.json({
-    //     id: response.body.id
-    //   })
-    // })
   } catch (error) {
     console.log(error);
     return res.send(error);

@@ -6,6 +6,7 @@ import {
   getProductById,
   getProductsByCategory,
   modifyProduct,
+  getManyById
 } from "../services/products.service";
 import { verifyUser } from "../services/auth.service";
 import { upload } from "../middlewares/multer";
@@ -13,6 +14,8 @@ import { upload } from "../middlewares/multer";
 const router = express.Router();
 
 router.get("/", getAllProducts);
+
+router.get("/stock", getManyById)
 
 router.get("/:id", getProductById);
 
