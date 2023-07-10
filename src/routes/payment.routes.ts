@@ -1,16 +1,16 @@
 import { Router } from "express";
 import mercadopago from "mercadopago";
 import { createPreference, sendFeedback } from "../services/payment.service";
+// import { verifyStock } from "../services/products.service";
 
 mercadopago.configure({
-  access_token: "TEST-2515620579334346-052314-13839e7fb3ae7e5875c1877ab0d46c39-216892891"
-})
+  access_token: process.env.TOKEN_MP as string,
+});
 
-const router = Router()
+const router = Router();
 
-export default router
+export default router;
 
-router.post("/create", createPreference)
+router.post("/create", createPreference);
 
-router.get("/feedback", sendFeedback)
-
+router.get("/feedback", sendFeedback);

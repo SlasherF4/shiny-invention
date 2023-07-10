@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import mercadopago from "mercadopago";
+import { PreferencePaymentMethods } from "mercadopago/models/preferences/create-payload.model";
 
 type Item = {
   title: string;
@@ -15,6 +16,7 @@ type Preference = {
     pending: "https://dinokids.site/payment/feedback";
   };
   auto_return: "approved";
+  payment_methods: PreferencePaymentMethods
 };
 
 export const createPreference = async (
@@ -32,6 +34,11 @@ export const createPreference = async (
         pending: "https://dinokids.site/payment/feedback",
       },
       auto_return: "approved",
+      payment_methods: {
+        excluded_payment_types: [
+          { id: "ticket" }
+        ]
+      }
     };
     const response = await mercadopago.preferences.create(preference);
     return res.json({
@@ -58,3 +65,5 @@ export const sendFeedback = async (
     return res.send(error);
   }
 };
+
+
