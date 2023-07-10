@@ -40,6 +40,21 @@ export type category = {
   available: boolean
 }
 
+//transactions
+type Item = {
+  product: string,
+  model: string,
+  size: string,
+  price: number
+}
+
+export type Transaction = {
+  detail: Item[],
+  total: number,
+  date: Date,
+  state: "pending" | "successfull" | "refused"
+}
+
 // export type id = Types.ObjectId
 
 export type newProduct = Omit<Product, "_id">
@@ -83,6 +98,20 @@ const categorySchema = new Schema<category>({
 
 export const categoryModel = model<category>("Categories", categorySchema)
 
+//transactions
+const transactionSchema = new Schema<Transaction>({
+  detail: [{
+    product: String,
+    model: String,
+    size: String,
+    price: Number
+  }],
+  date: { type: Date, default: Date.now() },
+  state: String,
+  total: Number
+})
+
+export const transactionModel = model<Transaction>("Transactions", transactionSchema)
 //database connect
 
 const uri = process.env.DATABASE_URI as string
