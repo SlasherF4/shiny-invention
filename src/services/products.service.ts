@@ -1,17 +1,12 @@
 import { NextFunction, Request, Response } from "express";
-import { Product, productModel } from "../mongoose";
+import { productModel } from "../mongoose";
+import { Types } from "mongoose";
+import { PreferenceRequest, Product, Size } from "../types";
 
 type reqBody = {
   product: string;
   image: string;
 };
-
-type verifyBody = {
-  _id: string;
-  size: string;
-  model: string;
-  quantity: number
-}
 
 export const getManyById = async (
   req: Request,
@@ -21,8 +16,8 @@ export const getManyById = async (
   try {
     const idList: { _id: string }[] = req.body;
     const productsList = await productModel.find({ $or: idList });
-    if(productsList.length) return res.send(productsList);
-    return res.sendStatus(404)
+    if (productsList.length) return res.send(productsList);
+    return res.sendStatus(404);
   } catch (error) {
     return res.send(error);
   }
@@ -34,21 +29,43 @@ export const verifyStock = async (
   next: NextFunction
 ) => {
   try {
-    const products: verifyBody[] = req.body;
-    const idList = products.map(({_id}) => {
-      return { _id };
+    const { items }: PreferenceRequest = req.body;
+    console.log(req.body);
+    let sufficientStock: boolean[] = [];
+    const list = items.map(async (product) => {
+      const item: Size[] = await productModel
+        .aggregate([
+          { $unwind: "$inventary" },
+          { $unwind: "$inventary.sizes" },
+          {
+            $match: {
+              "inventary.sizes._id": new Types.ObjectId(product.id),
+            },
+          },
+          {
+            $limit: 1,
+          },
+          {
+            $project: {
+              _id: "$inventary.sizes._id",
+              size: "$inventary.sizes.size",
+              stock: "$inventary.sizes.stock"
+            },
+          },
+        ])
+        .exec();
+        console.log({ result: item, item: item[0].stock, q: product.quantity});
+      sufficientStock.push(item[0].stock >= (product.quantity || 0));
+      return item;
     });
-    const productsList = await productModel.find({ $or: idList });
-    const insufficientStock = productsList.map((product) => {
-      const current = products.find(e => e._id == product._id as any) as verifyBody;
-      const model = product.inventary.find(e => e.model == current.model)
-      const size = model?.sizes.find(e => e.size == current.size)
-      return size?.stock as number >= current?.quantity
-    }).includes(false)
-    if(insufficientStock) return res.status(404).send(productsList);
+    const ready = await Promise.all(list);
+    const resultsList = ready.flat(1)
+    console.log({ sufficientStock });
+    if (sufficientStock.includes(false)) return res.status(403).send(resultsList);
     return next();
   } catch (error) {
-    return res.send(error);
+    console.log(error)
+    return res.status(500).send(error);
   }
 };
 
