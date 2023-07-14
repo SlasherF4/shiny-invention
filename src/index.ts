@@ -7,6 +7,7 @@ import { DbConnect } from "./mongoose";
 import cors from "cors";
 import * as dotenv from "dotenv";
 import path from "path";
+import swaggerDocs from "./docs/swagger";
 
 dotenv.config();
 
@@ -51,6 +52,7 @@ app.use("/payment", paymentRouter)
 
 app.listen(PORT, () => {
   console.log(`server listening on port ${PORT}`);
+  swaggerDocs(app, PORT)
 });
 
 DbConnect();
