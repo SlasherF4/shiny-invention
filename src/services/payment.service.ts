@@ -1,23 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import mercadopago from "mercadopago";
-import { PreferencePaymentMethods } from "mercadopago/models/preferences/create-payload.model";
-
-type Item = {
-  title: string;
-  unit_price: number;
-  quantity: number;
-};
-
-type Preference = {
-  items: Item[];
-  back_urls: {
-    success: "https://dinokids.site/payment/feedback";
-    failure: "https://dinokids.site/payment/feedback";
-    pending: "https://dinokids.site/payment/feedback";
-  };
-  auto_return: "approved";
-  payment_methods: PreferencePaymentMethods
-};
+import { CreatePreferencePayload } from "mercadopago/models/preferences/create-payload.model";
+import { PreferenceRequest } from "../types";
+import { DateTime } from "luxon";
 
 export const createPreference = async (
   req: Request,
@@ -25,9 +10,10 @@ export const createPreference = async (
   _next: NextFunction
 ): Promise<Response> => {
   try {
-    const list: Item[] = req.body;
-    let preference: Preference = {
-      items: list,
+    console.log(DateTime.now().toISO());
+    const { items, shipments }: PreferenceRequest = req.body;
+    let preference: CreatePreferencePayload = {
+      items,
       back_urls: {
         success: "https://dinokids.site/payment/feedback",
         failure: "https://dinokids.site/payment/feedback",
@@ -35,10 +21,12 @@ export const createPreference = async (
       },
       auto_return: "approved",
       payment_methods: {
-        excluded_payment_types: [
-          { id: "ticket" }
-        ]
-      }
+        excluded_payment_types: [{ id: "ticket" }],
+      },
+      shipments,
+      expires: true,
+      expiration_date_from: DateTime.now().toISO() as string,
+      expiration_date_to: DateTime.now().plus({ minutes: 15 }).toISO() as string
     };
     const response = await mercadopago.preferences.create(preference);
     return res.json({
@@ -65,5 +53,3 @@ export const sendFeedback = async (
     return res.send(error);
   }
 };
-
-

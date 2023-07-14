@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { User, userModel } from "../mongoose";
+import { userModel } from "../mongoose";
 import { generateToken, verifyToken } from "../middlewares/jwt";
+import { User } from "../types";
 
 type userToken = {
   email: string;
